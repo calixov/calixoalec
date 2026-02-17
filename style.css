@@ -1,0 +1,190 @@
+:root {
+    --neon-blue: #00d2ff;
+    --neon-red: #ff3e3e;
+    --bg-color: #02050a;
+    --glass: rgba(0, 15, 30, 0.95);
+    --border-color: #333;
+}
+
+body {
+    background-color: black;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    margin: 0;
+    min-height: 100vh;
+    background-image: radial-gradient(circle at center, #0a1a2a 0%, #000 100%);
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    border: 1px solid var(--neon-blue);
+    background: var(--glass);
+    padding: 20px;
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.15);
+    display: flex;
+    flex-direction: column;
+    height: 85vh;
+    position: relative;
+}
+
+/* Header & Status */
+h1 { margin: 0; color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); font-size: 1.5rem; text-align: center; margin-bottom: 10px; }
+.system-msg { color: var(--neon-red); text-align: center; font-size: 0.8rem; height: 20px; font-style: italic; margin-bottom: 15px; }
+.status-bar { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
+.highlight { color: var(--neon-blue); }
+.xp-container { width: 100%; height: 10px; background: #111; border: 1px solid var(--border-color); margin-bottom: 20px; }
+.xp-fill { height: 100%; width: 0%; background: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); transition: width 0.5s ease; }
+
+/* Navigation */
+.nav-tabs { display: flex; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
+.tab-btn { flex: 1; background: transparent; border: none; color: #555; padding: 15px; cursor: pointer; font-family: inherit; font-size: 0.9rem; transition: 0.3s; border-bottom: 2px solid transparent; }
+.tab-btn.active { color: var(--neon-blue); border-bottom: 2px solid var(--neon-blue); text-shadow: 0 0 5px var(--neon-blue); }
+.tab-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+
+/* Content Areas */
+.content-area { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
+.content-area::-webkit-scrollbar { width: 4px; }
+.content-area::-webkit-scrollbar-thumb { background: var(--neon-blue); }
+.hidden { display: none !important; }
+
+/* Quest Items */
+.quest-item { background: rgba(255, 255, 255, 0.03); margin-bottom: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--border-color); transition: 0.3s; }
+.quest-item:hover { border-left-color: var(--neon-blue); background: rgba(0, 210, 255, 0.05); }
+
+/* Edit Controls */
+.edit-controls button { background: transparent; border: 1px solid #444; color: #888; padding: 5px 10px; cursor: pointer; margin-left: 5px; font-family: inherit; font-size: 0.75rem; }
+.edit-controls button.del:hover { border-color: var(--neon-red); color: var(--neon-red); }
+.edit-controls button.edit:hover { border-color: var(--neon-blue); color: var(--neon-blue); }
+
+/* Play Checkbox */
+.checkbox-area { width: 20px; height: 20px; border: 2px solid var(--neon-blue); display: flex; align-items: center; justify-content: center; cursor: pointer; margin-right: 15px; transition: 0.2s; }
+.checked { background: var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue); }
+.quest-done { text-decoration: line-through; color: #555; }
+
+/* Input */
+.input-group { display: flex; margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border-color); }
+input { background: rgba(0,0,0,0.5); border: 1px solid #444; color: white; padding: 12px; flex-grow: 1; font-family: inherit; outline: none; }
+input:focus { border-color: var(--neon-blue); }
+.add-btn { background: var(--neon-blue); border: none; padding: 0 20px; font-weight: bold; cursor: pointer; color: black; }
+
+/* Calendar & History Styles */
+.calendar-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+.day-card { border: 1px solid #333; padding: 10px; text-align: center; cursor: pointer; transition: 0.3s; background: rgba(255,255,255,0.02); }
+.day-card:hover { border-color: var(--neon-blue); }
+.day-card .date { font-size: 0.8rem; color: #888; margin-bottom: 5px; }
+.day-card .xp-indicator { font-size: 1.2rem; font-weight: bold; }
+.perfect-day { border-color: gold; color: gold; box-shadow: 0 0 5px gold; }
+
+.history-box { border-top: 2px solid var(--neon-blue); margin-top: 20px; padding-top: 20px; animation: fadeIn 0.5s; }
+.history-box h3 { color: var(--neon-blue); text-align: center; }
+.history-box ul { list-style: none; padding: 0; }
+.history-box li { padding: 5px 0; border-bottom: 1px solid #222; display: flex; justify-content: space-between; }
+.close-btn { width: 100%; padding: 10px; background: #333; color: white; border: none; margin-top: 10px; cursor: pointer; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* --- RANK SYSTEM STYLES --- */
+
+/* گرید برای چیدن کارت‌ها (دو ستون) */
+.rank-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* دو تا در هر ردیف */
+    gap: 15px;
+    padding: 10px;
+}
+
+/* ظاهر کلی کارت رنک */
+.rank-card {
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    transition: all 0.4s ease;
+    opacity: 0.4; /* حالت پیش‌فرض: کم‌رنگ (قفل) */
+    filter: grayscale(100%); /* سیاه و سفید بودن وقتی قفله */
+}
+
+/* بزرگ بودن حرف رنک (S, A, B...) */
+.rank-letter {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 5px;
+    text-shadow: 0 0 5px currentColor;
+}
+
+.rank-xp-req {
+    font-size: 0.7rem;
+    color: #888;
+    letter-spacing: 1px;
+}
+
+/* --- حالت آنلاک (باز شده) --- */
+.rank-card.unlocked {
+    opacity: 1;
+    filter: grayscale(0%);
+    background: rgba(255, 255, 255, 0.02);
+    transform: scale(1.02); /* کمی بزرگ‌تر میشه */
+}
+
+/* --- رنگ‌بندی اختصاصی رنک‌ها --- */
+
+/* Rank E - White */
+.rank-E.unlocked {
+    border-color: #ffffff;
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Rank D - Green */
+.rank-D.unlocked {
+    border-color: #00ff00;
+    color: #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+/* Rank C - Blue */
+.rank-C.unlocked {
+    border-color: #00d2ff;
+    color: #00d2ff;
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
+}
+
+/* Rank B - Purple */
+.rank-B.unlocked {
+    border-color: #bc13fe;
+    color: #bc13fe;
+    box-shadow: 0 0 15px rgba(188, 19, 254, 0.5);
+}
+
+/* Rank A - Red */
+.rank-A.unlocked {
+    border-color: #ff3e3e;
+    color: #ff3e3e;
+    box-shadow: 0 0 20px rgba(255, 62, 62, 0.6);
+}
+
+/* Rank S - Gold (Special Animation) */
+.rank-S.unlocked {
+    border-color: #ffd700;
+    color: #ffd700;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+    animation: goldPulse 2s infinite alternate; /* انیمیشن ضربان */
+}
+
+/* انیمیشن مخصوص رنک S */
+@keyframes goldPulse {
+    from { box-shadow: 0 0 10px #ffd700; }
+    to { box-shadow: 0 0 30px #ffd700, 0 0 10px white; }
+}
+
+/* اگر موبایل بود، تک ستونه بشه */
+@media (max-width: 400px) {
+    .rank-container {
+        grid-template-columns: 1fr;
+    }
+}

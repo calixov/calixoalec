@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo Leveling System: Architect</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>[ SYSTEM INTERFACE ]</h1>
+        <div class="system-msg" id="msg-box">Loading System...</div>
+    </header>
+
+    <div class="status-bar">
+        <span>PLAYER: <span id="level-txt" class="highlight">LV. 1</span></span>
+        <span id="xp-txt">0% COMPLETE</span>
+    </div>
+    <div class="xp-container"><div class="xp-fill" id="xp-bar"></div></div>
+
+   <div class="nav-tabs">
+        <button class="tab-btn" onclick="switchTab('setup')" id="btn-setup">QUEST MAKER</button>
+        <button class="tab-btn active" onclick="switchTab('play')" id="btn-play">TODAY'S QUESTS</button>
+        <button class="tab-btn" onclick="switchTab('calendar')" id="btn-calendar">CALENDAR</button>
+        <button class="tab-btn" onclick="switchTab('rank')" id="btn-rank">HUNTER RANK</button>
+    </div>
+    <div id="view-setup" class="content-area hidden">
+        <div id="setup-list"></div>
+        <div class="input-group">
+            <input type="text" id="new-quest-input" placeholder="Enter new command...">
+            <button class="add-btn" onclick="addQuest()">ADD</button>
+        </div>
+    </div>
+
+    <div id="view-play" class="content-area">
+        <div id="date-display" style="text-align:center; color:#555; margin-bottom:10px; font-size:0.8rem;"></div>
+        <div id="play-list"></div>
+    </div>
+
+    <div id="view-calendar" class="content-area hidden">
+        <div id="calendar-grid" class="calendar-container"></div>
+        <div id="history-details" class="history-box hidden">
+            <h3 id="hist-date">Date</h3>
+            <ul id="hist-list"></ul>
+            <button onclick="closeHistory()" class="close-btn">CLOSE</button>
+        </div>
+    </div>
+    <div id="view-rank" class="content-area hidden">
+        <div style="text-align:center; margin-bottom:20px;">
+            <h2 id="current-rank-display" style="color:var(--neon-blue); margin:0;">RANK: E</h2>
+            <div style="font-size:0.8rem; color:#888;">TOTAL XP: <span id="total-xp-display">0</span></div>
+        </div>
+        
+        <div id="rank-grid" class="rank-container"></div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
