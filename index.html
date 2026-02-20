@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solo Leveling System: Architect</title>
+    <title>Solo Leveling System</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -16,20 +17,31 @@
 
     <div class="status-bar">
         <span>PLAYER: <span id="level-txt" class="highlight">LV. 1</span></span>
-        <span id="xp-txt">0% COMPLETE</span>
+        <div>
+            <span id="gold-top" style="color: var(--neon-gold); font-weight: bold; margin-right: 10px; text-shadow: 0 0 5px var(--neon-gold);">0 G</span>
+            <span id="rank-badge" class="rank-badge rank-e">RANK E</span>
+        </div>
+    </div>
+    <div class="xp-info" style="font-size: 0.75rem; color: #888; text-align: right; margin-bottom: 2px;">
+        <span id="xp-numbers">0 / 100 XP</span>
     </div>
     <div class="xp-container"><div class="xp-fill" id="xp-bar"></div></div>
 
-   <div class="nav-tabs">
-        <button class="tab-btn" onclick="switchTab('setup')" id="btn-setup">QUEST MAKER</button>
-        <button class="tab-btn active" onclick="switchTab('play')" id="btn-play">TODAY'S QUESTS</button>
-        <button class="tab-btn" onclick="switchTab('calendar')" id="btn-calendar">CALENDAR</button>
-        <button class="tab-btn" onclick="switchTab('rank')" id="btn-rank">HUNTER RANK</button>
+    <div class="nav-tabs" id="main-nav">
+        <button class="tab-btn" onclick="switchTab('setup')" id="btn-setup">QUESTS</button>
+        <button class="tab-btn active" onclick="switchTab('play')" id="btn-play">TODAY</button>
+        <button class="tab-btn" onclick="switchTab('calendar')" id="btn-calendar">LOG</button>
+        <button class="tab-btn" onclick="switchTab('stats')" id="btn-stats">STATS</button>
+        <button class="tab-btn" onclick="switchTab('shop')" id="btn-shop" style="color: var(--neon-gold); font-weight: bold;">SHOP</button>
+        <button class="tab-btn" onclick="switchTab('ranks')" id="btn-ranks">RANK</button>
     </div>
+
     <div id="view-setup" class="content-area hidden">
         <div id="setup-list"></div>
         <div class="input-group">
-            <input type="text" id="new-quest-input" placeholder="Enter new command...">
+            <input type="text" id="new-quest-input" placeholder="New quest...">
+            <input type="number" id="new-quest-xp" placeholder="XP" min="1" max="100" title="XP Reward">
+            <input type="number" id="new-quest-gold" placeholder="G" min="0" max="500" title="Gold Reward">
             <button class="add-btn" onclick="addQuest()">ADD</button>
         </div>
     </div>
@@ -41,19 +53,49 @@
 
     <div id="view-calendar" class="content-area hidden">
         <div id="calendar-grid" class="calendar-container"></div>
-        <div id="history-details" class="history-box hidden">
-            <h3 id="hist-date">Date</h3>
-            <ul id="hist-list"></ul>
-            <button onclick="closeHistory()" class="close-btn">CLOSE</button>
+    </div>
+
+    <div id="view-stats" class="content-area hidden">
+        <h2 style="text-align:center; color:var(--neon-blue); font-size: 1.2rem; margin-bottom: 20px;">7-DAY XP PERFORMANCE</h2>
+        <div style="background: rgba(0,0,0,0.5); padding: 10px; border: 1px solid #333; border-radius: 5px;">
+            <canvas id="xpChart"></canvas>
+        </div>
+        <div id="penalty-zone-msg" style="margin-top: 20px; text-align: center; color: var(--neon-red); font-size: 0.9rem;"></div>
+        
+        <div class="backup-section">
+            <h3>[ SYSTEM BACKUP ]</h3>
+            <p>Create a save point or restore your progress.</p>
+            <div class="backup-btns">
+                <button onclick="exportData()" class="action-btn"> CREATE SAVE</button>
+                <label class="action-btn" style="cursor: pointer;">
+                     LOAD SAVE
+                    <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importData(event)">
+                </label>
+            </div>
         </div>
     </div>
-    <div id="view-rank" class="content-area hidden">
-        <div style="text-align:center; margin-bottom:20px;">
-            <h2 id="current-rank-display" style="color:var(--neon-blue); margin:0;">RANK: E</h2>
-            <div style="font-size:0.8rem; color:#888;">TOTAL XP: <span id="total-xp-display">0</span></div>
-        </div>
+
+    <div id="view-shop" class="content-area hidden">
+        <h2 style="text-align:center; color:var(--neon-gold); font-size: 1.2rem; margin-bottom: 5px; letter-spacing: 2px;">SYSTEM SHOP</h2>
+        <div id="shop-gold-display" style="text-align:center; color:#ccc; margin-bottom: 20px; font-size: 0.9rem;">BALANCE: 0 G</div>
+        <div id="shop-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
+    </div>
+
+    <div id="view-ranks" class="content-area hidden">
+        <div class="rank-grid" id="rank-list"></div>
+    </div>
+
+    <div id="penalty-overlay" class="penalty-fullscreen hidden">
+        <div class="warning-header">⚠️ WARNING ⚠️</div>
+        <h1 class="danger-title">PENALTY ZONE</h1>
+        <p class="danger-desc">You failed to complete your daily quests.<br>The system has moved you to the penalty zone.</p>
         
-        <div id="rank-grid" class="rank-container"></div>
+        <div class="punishment-box">
+            <h3>SURVIVAL QUEST:</h3>
+            <h2 id="punishment-text">100 PUSH-UPS</h2>
+        </div>
+
+        <button class="survive-btn" onclick="survivePenalty()">I HAVE SURVIVED</button>
     </div>
 
 </div>
